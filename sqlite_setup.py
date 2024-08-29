@@ -4,12 +4,16 @@ I should define the models in the same file where I'm creating and binding
 the engine. I'm sure some basic importing can make Base accessible elsewhere,
 however I decided to keep things simple and focus on achieving better control
 of sqlalchemy.orm rather than of the python importing game.
+
+Furthermore, I'm choosing to work with strings as arguments of most methods,
+in order to cut out the necessity for any additional layers of control.
 """
 
-from typing import Dict
+from typing import Type, List, Optional, cast
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
-from sqlalchemy.orm import declarative_base, sessionmaker, relationship, backref
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, literal
+from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import relationship, backref
 from data_manager_interface import DataManagerInterface
 
 # Create the database engine/connection
@@ -30,13 +34,6 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(80), nullable=False)
 
-    def to_dict(self) -> Dict:
-        """Convert the User object to a dictionary"""
-        return {
-            'id': self.id,
-            'name': self.name
-        }
-
 
 # Define the 'movies' table model
 class Movie(Base):
@@ -52,16 +49,6 @@ class Movie(Base):
     director = Column(String(120), nullable=False)
     year = Column(Integer, nullable=False)
     rating = Column(Float, nullable=False)
-
-    def to_dict(self) -> Dict:
-        """Convert the Movie object to a dictionary"""
-        return {
-            'id': self.id,
-            'name': self.name,
-            'director': self.director,
-            'year': self.year,
-            'rating': self.rating
-        }
 
 
 # Define the 'user_movies' junction table model
@@ -100,23 +87,15 @@ class SQLiteDataManager(DataManagerInterface):
     def __init__(self):
         self.db_session = Session()  # Create a session instance
 
-    def get_all_users(self):
-        """
-        Return a [] of dictionaries (User objects converted to dictionaries)
-        """
-        list_of_user_objects = self.db_session.query(User).all()
-        users_list = [user.to_dict() for user in list_of_user_objects]
-        return users_list
+    def get_all_users(self) -> List[Type[User]]:
+        """Return a [] of User objects"""
+        return self.db_session.query(User).all()
 
-    def get_all_movies(self):
-        """
-        Return a [] of dictionaries (Movie objects converted to dictionaries)
-        """
-        list_of_movie_objects = self.db_session.query(Movie).all()
-        movies_list = [movie.to_dict() for movie in list_of_movie_objects]
-        return movies_list
+    def get_all_movies(self) -> List[Type[Movie]]:
+        """Return a [] of Movie objects"""
+        return self.db_session.query(Movie).all()
 
-    def get_user_movies(self, user_id):
+    def get_user_movies(self, user_id: int) -> List[Type[Movie]]:
         """
         We consult (!) UserMovie in order to fetch a [] of Movie (!) objects.
         Explanation:
@@ -125,16 +104,16 @@ class SQLiteDataManager(DataManagerInterface):
         So we are able to address UserMovie within that join:
         filter(UserMovie.user_id == user_id)
         Return:
-        a [] of dictionaries (Movie objects converted to dictionaries)
+        a [] of Movie objects
         """
         movie_objects_list = self.db_session.query(Movie) \
             .join(UserMovie, Movie.id == UserMovie.movie_id) \
-            .filter(UserMovie.user_id == user_id) \
+            .filter(UserMovie.user_id == literal(user_id)) \
             .all()
-        user_movies_list = [movie.to_dict() for movie in movie_objects_list]
-        return user_movies_list
+        # user_movies_list = [movie.to_dict() for movie in movie_objects_list]
+        return movie_objects_list
 
-    def add_user(self, user):
+    def add_user(self, user: str):
         # .first() ensures that None is returned for no match, unlike .all()
         existing_user = self.db_session.query(User).filter_by(
             name=user).first()
@@ -147,7 +126,7 @@ class SQLiteDataManager(DataManagerInterface):
         self.db_session.commit()
         print(f"User '{user}' added successfully!")
 
-    def add_movie(self, name, director, year, rating):
+    def add_movie(self, name: str, director: str, year: int, rating: float):
         existing_movie = self.db_session.query(Movie).filter_by(
             name=name).first()
         if existing_movie:
@@ -159,36 +138,61 @@ class SQLiteDataManager(DataManagerInterface):
         self.db_session.commit()
         print(f"Movie '{name}' added successfully!")
 
-    def add_user_movie(self, user_id, movie_id):
+    def add_user_movie(self, user: str, movie: str):
+        """Add a new relation of a user to a movie"""
+
+        # Validate input strings for existence in the 'movies' and 'users' tb
+        user_id = self.get_user_id(user)
+        movie_id = self.get_movie_id(movie)
+        if not user_id and not movie_id:
+            print(f"Error: User '{user}' and Movie '{movie}' not part of db.")
+        elif not user_id:
+            print(f"Error: {user} not in db, cannot be paired with {movie}")
+        elif not movie_id:
+            print(f"Error: {movie} not in db, cannot be paired with {user}")
+        if not user_id or not movie_id:
+            return
+
+        # Verify that the relationship doesn't already exist in 'user_movies'
         existing_relationship = self.db_session.query(UserMovie).filter_by(
             user_id=user_id, movie_id=movie_id).first()
         if existing_relationship:
-            print("User already has this movie!")
+            print(f"User {user} already has the movie {movie}!")
             return
+
+        # Add a new relationship entry to 'user_movies'
         new_relationship = UserMovie(user_id=user_id, movie_id=movie_id)
         self.db_session.add(new_relationship)
         self.db_session.commit()
-        print("Movie successfully added for this user!")
+        print(f"Movie {movie} successfully added for {user}!")
 
-    def get_user_id(self, user_name_sought):
+    def get_user_id(self, user_name_sought: str) -> Optional[int]:
+        """Retrieve user id if user_name_sought present, else None"""
         list_of_users = self.get_all_users()
         for user in list_of_users:
-            if user.get("name") == user_name_sought:
-                return int(user.get("id"))
+            if user.name == user_name_sought:
+                # cast necessary due to Pycharm typechecker vs. SQLAlchemy
+                return cast(int, user.id)
         return None
 
-    def get_movie_id(self, movie_title_sought):
+    def get_movie_id(self, movie_title_sought: str) -> Optional[int]:
+        """Retrieve movie id if movie_title_sought present, else None"""
         list_of_movies = self.get_all_movies()
         for movie in list_of_movies:
-            if movie.get("name") == movie_title_sought:
-                return int(movie.get("id"))
+            if movie.name == movie_title_sought:
+                # cast necessary due to Pycharm typechecker vs. SQLAlchemy
+                return cast(int, movie.id)
         return None
 
-    def update_movie(self, movie_id):
+    def update_movie(self, movie):
         pass
 
-    def delete_movie(self, movie_id):
+    def delete_movie(self, movie_id: int):
         movie_to_delete = self.db_session.query(Movie) \
-            .filter(Movie.id == movie_id)
+            .filter(Movie.id == literal(movie_id)).first()
+        if not movie_to_delete:
+            print(f"Error: Movie id <{movie_id}> not present in the db")
+            return
         self.db_session.delete(movie_to_delete)
         self.db_session.commit()
+        print(f"Movie with id <{movie_id}> successfully deleted.")

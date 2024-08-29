@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict
 
 
 class DataManagerInterface(ABC):
@@ -15,53 +14,53 @@ class DataManagerInterface(ABC):
     need to be abstract methods.
     """
     @abstractmethod
-    def get_all_users(self) -> List[Dict]:
-        """Return users data as a list of dictionaries"""
+    def get_all_users(self):
+        """Return users data as a list"""
         pass
 
     @abstractmethod
-    def get_all_movies(self) -> List[Dict]:
-        """Return movies data as a list of dictionaries"""
+    def get_all_movies(self):
+        """Return data for all movies"""
         pass
 
     @abstractmethod
-    def get_user_movies(self, user_id: int) -> List[Dict]:
-        """Return movies data for specific user as a list of dictionaries"""
+    def get_user_movies(self, user_id):
+        """Return a collection of movies for this user"""
         pass
 
     @abstractmethod
-    def add_user(self, user: str):
+    def add_user(self, user):
         """Add 'user' to the users table"""
         pass
 
     @abstractmethod
-    def add_movie(self, name: str, director: str, year: int, rating: float):
+    def add_movie(self, name, director, year, rating):
         """Add 'movie' to the movies table"""
         pass
 
     @abstractmethod
-    def add_user_movie(self, user_id: int, movie_id: int):
-        """Add relationship between user_id and movie_id to user_movies tb."""
+    def add_user_movie(self, user, movie):
+        """Add relationship between user and movie to user_movies tb."""
         pass
 
     @abstractmethod
-    def get_user_id(self, user_name_sought: str) -> int:
-        """Get user id if name present, else None"""
+    def get_user_id(self, user_name_sought):
+        """Retrieve the id of user_name_sought"""
         pass
 
     @abstractmethod
-    def get_movie_id(self, movie_title_sought: str) -> int:
-        """Get movie id if title present, else None"""
+    def get_movie_id(self, movie_title_sought):
+        """Retrieve the id of movie_title_sought"""
         pass
 
     @abstractmethod
-    def update_movie(self, movie_id: int):
-        """Update details of the movie with <movie_id> in the movies table"""
+    def update_movie(self, movie):
+        """Update details of the <movie> in the movies table"""
         pass
 
     @abstractmethod
-    def delete_movie(self, movie_id: int):
-        """Delete the movie entry with <movie_id> in the movies table"""
+    def delete_movie(self, movie_id):
+        """Delete the movie with <movie_id> in the movies table"""
         pass
 
     # @abstractmethod
