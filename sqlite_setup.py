@@ -135,21 +135,40 @@ class SQLiteDataManager(DataManagerInterface):
         return user_movies_list
 
     def add_user(self, user):
+        # .first() ensures that None is returned for no match, unlike .all()
+        existing_user = self.db_session.query(User).filter_by(
+            name=user).first()
+        if existing_user:
+            print(f"User '{user}' already exists in the database!")
+            return
         new_user = User(name=user)
         self.db_session.add(new_user)
         # SQLAlchemy will now automatically generate a unique ID when commit()
         self.db_session.commit()
+        print(f"User '{user}' added successfully!")
 
     def add_movie(self, name, director, year, rating):
-        new_movie = Movie(name="Titanic", director="James Cameron", year=1997,
-                          rating=7.8)
+        existing_movie = self.db_session.query(Movie).filter_by(
+            name=name).first()
+        if existing_movie:
+            print(f"Movie '{name}' already exists in the database!")
+            return
+        new_movie = Movie(name=name, director=director, year=year,
+                          rating=rating)
         self.db_session.add(new_movie)
         self.db_session.commit()
+        print(f"Movie '{name}' added successfully!")
 
     def add_user_movie(self, user_id, movie_id):
+        existing_relationship = self.db_session.query(UserMovie).filter_by(
+            user_id=user_id, movie_id=movie_id).first()
+        if existing_relationship:
+            print("User already has this movie!")
+            return
         new_relationship = UserMovie(user_id=user_id, movie_id=movie_id)
         self.db_session.add(new_relationship)
         self.db_session.commit()
+        print("Movie successfully added for this user!")
 
     def get_user_id(self, user_name_sought):
         list_of_users = self.get_all_users()
