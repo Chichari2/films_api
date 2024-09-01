@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
+    <nav class="navbar">
+      <a href="/users">change user</a>
+      <a href="/users/{{ user_id }}/add_movie">add movie</a>
+      <a href="/users/{{ user_id }}">home</a>
+    </nav>
     {% if popup %}
       <ul class=flashes>
       {% for category, message in popup %}
@@ -15,25 +20,25 @@
       </ul>
     {% endif %}
     <div class="bulk_body">
-    {% for movie in movies %}
+      {% for movie in movies %}
        <div class="book_repr">
           <div>
-            <h3>{{ movie.name }}</h3>
+            <h3>{{ movie.name }} ({{ movie.year }})</h3>
             <img src="{{ movie.poster }}" alt="poster from OMDb"/>
           </div>
           <div>
             <div class="book_by">
-              <p>by {{ movie.director }}</p>
+              <p>dir: {{ movie.director }}</p>
               <form action="/author/{{ movie.id }}/delete" method="GET"> <!--gotta delete 2 tables' entries. How?-->
                 <input style="color: #dbd5cc;" type="submit" value=": rem all works">
               </form>
             </div>
-            <form style="margin-top: 0;" action="/users/{{ user_id }}/delete_movie/{{ movie.id }}" method="GET">
+            <form style="margin-top: 0;" action="/users/{{ user_id }}/delete_movie/{{ movie.id }}/confirm" method="GET">
               <input type="submit" value="DELETE">
             </form>
           </div>
-        </div>
-    {% endfor %}
+       </div>
+      {% endfor %}
     </div>
   </body>
 </html>

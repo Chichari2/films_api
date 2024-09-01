@@ -9,7 +9,9 @@
   </head>
   <body>
     <nav class="navbar">
-      <a href="/">home</a>
+      <a href="/users">change user</a>
+      <a href="/users/{{ user_id }}/add_movie">add movie</a>
+      <a href="/users/{{ user_id }}">home</a>
     </nav>
     {% if popup %}
       <ul class=flashes>
@@ -18,7 +20,7 @@
       {% endfor %}
       </ul>
     {% endif %}
-    <form class="form" action="/users/{{ user_id }}/add_movie" method="POST">
+    <form class="form" action="/users/{{ user_id }}/add_movie/confirm" method="POST">
       <label for="name">Movie Title</label>
       <input type="text" id="name" name="name" required><br><br>
       <input type="submit" value="Look Up Movie">

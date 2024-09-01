@@ -79,33 +79,58 @@ def add_user_movie(user_id):
         return render_template('add_movie.html',
                                popup=popup, user_id=user_id), 200
     elif request.method == 'POST':
-        print("yo1")
-        name = request.form.get('name', "").strip()
-        if not name:
-            abort(400)
+        # name = request.form.get('name', "").strip()
+        # if not name:
+        #     abort(400)
+        #
+        # # repurposing 'name' variable currently
+        # fetched_data = fetch_omdb_data(name)
+        # if not fetched_data:
+        #     flash(f"oMDB API found nothing, try another query", "info")
+        #     return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
+        # name, director, year, rating, poster = fetched_data
+        # if not (name and director and year and rating and poster):
+        #     flash(f"Incomplete oMDB API entry, try another query", "info")
+        #     return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
+        # else:
 
-        # repurposing 'name' variable currently
-        fetched_data = fetch_omdb_data(name)
-        if not fetched_data:
-            flash(f"oMDB API found nothing, try another query", "info")
-            return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
-        name, director, year, rating, poster = fetched_data
-        if not (name and director and year and rating and poster):
-            flash(f"Incomplete oMDB API entry, try another query", "info")
-            return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
-        else:
-            movie_id = data_manager.add_movie(name, director, year,
-                                              rating, poster)
-            print(f"movie id: {movie_id}. user id: {user_id}")
-            data_manager.add_user_movie(user_id, movie_id)
-            flash(f"'{name}' added to database.", "info")
-            # movies = data_manager.get_user_movies(user_id)
-            return redirect(url_for('list_user_movies', user_id=user_id)), 302
+        # reacquire the data that was passed through the html
+        name = request.form.get('name')
+        director = request.form.get('director')
+        year = request.form.get('year')
+        rating = request.form.get('rating')
+        poster = request.form.get('poster')
+        movie_id = data_manager.add_movie(name, director, int(year),
+                                          float(rating), poster)
+        print(f"movie id: {movie_id}. user id: {user_id}")
+        data_manager.add_user_movie(user_id, movie_id)
+        flash(f"'{name}' added to database.", "info")
+        # movies = data_manager.get_user_movies(user_id)
+        return redirect(url_for('list_user_movies', user_id=user_id)), 302
 
 
-@app.route('/users/<user_id>/confirm_movie', methods=['GET', 'POST'])
-def confirm_user_movie(user_id):
-    pass
+@app.route('/users/<user_id>/add_movie/confirm', methods=['POST'])
+def confirm_adding(user_id):
+    """Render a page to have user confirm the inclusion of what OMDB has
+    fetched. Exclusively handles POST method."""
+    name = request.form.get('name', "").strip()
+    if not name:
+        abort(400)
+
+    fetched_data = fetch_omdb_data(name)
+    if not fetched_data:
+        flash(f"oMDB API found nothing, try another query", "info")
+        return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
+    # repurposing 'name' variable currently
+    name, director, year, rating, poster = fetched_data
+    if not (name and director and year and rating and poster):
+        flash(f"Incomplete oMDB API entry, try another query", "info")
+        return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
+    else:
+        return render_template(
+            'confirm_adding.html',name=name,
+            director=director, year=year, rating=rating,
+            poster=poster, user_id=user_id)
 
 
 @app.route('/users/<user_id>/update_movie/<movie_id>')
@@ -119,8 +144,16 @@ def delete_user_movie(user_id, movie_id):
     mov_to_del = data_manager.db_session.query(Movie).filter(Movie.id == movie_id).one()
     mov_title = mov_to_del.name
     data_manager.delete_movie(user_id, movie_id)
-    flash(f"'{mov_title}' successfully removed from inventory.", "info")
+    flash(f"'{mov_title}' successfully removed from database.", "info")
     return redirect(url_for('list_user_movies', user_id=user_id)), 302
+
+
+@app.route('/users/<user_id>/delete_movie/<movie_id>/confirm')
+def confirm_deletion(user_id, movie_id):
+    """Render a page to ask user's confirmation."""
+    movie = data_manager.db_session.query(Movie).filter(Movie.id == movie_id).one()
+    return render_template('confirm_deletion.html',
+                           movie=movie, user_id=user_id), 200
 
 
 if __name__ == "__main__":

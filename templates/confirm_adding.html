@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Confirm adding of movie</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/users">change user</a>
+      <a href="/users/{{ user_id }}/add_movie">add movie</a>
+      <a href="/users/{{ user_id }}">home</a>
+    </nav>
+    <p>Is this the movie you wanted to add?</p>
+    <div class="movie_centered">
+      <div>
+        <h3>{{ name }} ({{ year }})</h3>
+        <img src="{{ poster }}" alt="poster from OMDb"/>
+      </div>
+      <div>
+        <div class="book_by">
+          <p>dir: {{ director }}</p>
+        </div>
+      </div>
+      <form style="margin-top: 0;" action="/users/{{ user_id }}/add_movie" method="POST">
+        <input type="hidden" name="name" value="{{ name }}">
+        <input type="hidden" name="director" value="{{ director }}">
+        <input type="hidden" name="year" value="{{ year }}">
+        <input type="hidden" name="rating" value="{{ rating }}">
+        <input type="hidden" name="poster" value="{{ poster }}">
+        <input type="submit" value="Yes, add this movie">
+      </form>
+      <form style="margin-top: 0;" action="/users/{{ user_id }}/add_movie" method="GET">
+        <input type="submit" value="No, try a modified title">
+      </form>
+    </div>
+  </body>
+</html>

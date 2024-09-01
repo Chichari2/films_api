@@ -8,7 +8,7 @@ body {
 input {
     border: none;
     height: 20px;
-    width: 200px;
+    width: 300px;
     margin-top: 5px;
 }
 
@@ -41,6 +41,14 @@ select {
     padding: 0.5em;
     margin: 0;
     background-color: #d6b492;
+    a {
+        height: 40px;
+        margin-right: 40px;
+        color: white;
+        text-decoration: none; /* Remove underline */
+        font-size: 2em;
+        transition: background-color 0.3s;
+    }
 }
 
 .menu {
@@ -51,36 +59,24 @@ select {
     align-items: center;
     padding: 0.5em;
     margin-bottom: 1em;
-}
-
-.menu input {
-    height: 20px;
-    font-size: 12px;
-    width: 100px;
-    margin-top: 0;
-    padding: 0;
-    background-color: #c9a37d;
-}
-
-.menu input[type="text"] {
-    width: 250px;
+    input {
+        height: 20px;
+        font-size: 12px;
+        width: 100px;
+        margin-top: 0;
+        padding: 0;
+        background-color: #c9a37d;
+    }
+    input[type="text"] {
+        width: 250px;
+    }
+    select {
+        margin-bottom: 0;
+    }
 }
 
 ::placeholder {
     color: #dbd5cc;
-}
-
-.menu select {
-    margin-bottom: 0;
-}
-
-.navbar a {
-    height: 40px;
-    margin-right: 40px;
-    color: white;
-    text-decoration: none; /* Remove underline */
-    font-size: 2em;
-    transition: background-color 0.3s;
 }
 
 .bulk_body {
@@ -90,8 +86,8 @@ select {
 }
 
 .book_repr {
-    width: 200px;
-    height: 460px;
+    width: 300px;
+    height: 590px;
     margin: 20px;
     font-size: 10px;
     display: flex;
@@ -99,35 +95,42 @@ select {
     justify-content: space-between;
 }
 
+.movie_centered {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 590px;
+    margin: 20px;
+    font-size: 10px;
+}
+
 .book_by {
+    p {
+        margin-top: 13px;
+        margin-left: 1px;
+    }
+    input[type="submit"] {
+        width: 80px;
+        font-size: 10px;
+        height: 18px;
+        background-color: #c9a37d;
+        align-content: center;
+        line-height: normal;
+        vertical-align: middle;
+        padding: 3px;
+    }
+    input[type="submit"]:hover {
+        background-color: #630e0e;
+    }
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0;
 }
 
-.book_by p {
-    margin-top: 13px;
-    margin-left: 1px;
-}
-
-.book_by input[type="submit"] {
-    width: 80px;
-    font-size: 10px;
-    height: 18px;
-    background-color: #c9a37d;
-    align-content: center;
-    line-height: normal;
-    vertical-align: middle;
-    padding: 3px;
-}
-
-.book_by input[type="submit"]:hover {
-    background-color: #630e0e;
-}
-
 img {
-    width: 200px;
+    width: 300px;
     object-fit: cover;
     border-radius: 3px;
 }
@@ -139,29 +142,28 @@ img {
     align-items: center;
     color: #faf4ed;
     margin-top: 50px;
-}
-
-.form select {
-    border: none;
-    width: 200px;
-    height: 20px;
-    color: grey;
-    border-radius: 3px;
+    select {
+        border: none;
+        width: 200px;
+        height: 20px;
+        color: grey;
+        border-radius: 3px;
+    }
 }
 
 .flashes {
     list-style-type: none;
     padding: 0;
-}
-.flashes li {
-    padding: 10px;
-    text-align: center;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    background-color: #f0f8ff;
-    color: #000;
-    opacity: 1;
-    animation: fadeOut 4s forwards;
+    li {
+        padding: 10px;
+        text-align: center;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #f0f8ff;
+        color: #000;
+        opacity: 1;
+        animation: fadeOut 4s forwards;
+    }
 }
 
 @keyframes fadeOut {

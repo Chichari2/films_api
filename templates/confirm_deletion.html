@@ -4,23 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Confirm user deletion</title>
+    <title>Confirm movie deletion</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
-    <p>Delete this movie?</p>
-    <div class="book_repr">
+    <nav class="navbar">
+      <a href="/users">change user</a>
+      <a href="/users/{{ user_id }}/add_movie">add movie</a>
+      <a href="/users/{{ user_id }}">home</a>
+    </nav>
+    <p>Are you sure you want to remove this movie?</p>
+    <div class="movie_centered">
       <div>
-        <h3>{{ movie.name }}</h3>
+        <h3>{{ movie.name }} ({{ movie.year }})</h3>
         <img src="{{ movie.poster }}" alt="poster from OMDb"/>
       </div>
       <div>
         <div class="book_by">
-          <p>by {{ movie.director }}</p>
+          <p>dir: {{ movie.director }}</p>
         </div>
       </div>
       <form style="margin-top: 0;" action="/users/{{ user_id }}/delete_movie/{{ movie.id }}" method="GET">
         <input type="submit" value="YES">
+      </form>
+      <form style="margin-top: 0;" action="/users/{{ user_id }}" method="GET">
+        <input type="submit" value="NO">
       </form>
     </div>
   </body>
