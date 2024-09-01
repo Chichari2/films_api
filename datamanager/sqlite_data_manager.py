@@ -135,7 +135,7 @@ class SQLiteDataManager(DataManagerInterface):
     def user_id_exists(self, user_id: int) -> bool:
         """Return True if user_id present in 'users' table"""
         existing_user = self.db_session.query(User).filter_by(
-            id=user_id).first()
+            id=user_id).one()
         if existing_user:
             return True
         return False
@@ -160,11 +160,11 @@ class SQLiteDataManager(DataManagerInterface):
         # obtain 'movie' and 'user' names
         movie_object = self.db_session.query(Movie) \
             .filter(Movie.id == movie_id) \
-            .first()
+            .one()
         movie = movie_object.name
         user_object = self.db_session.query(User) \
             .filter(User.id == user_id) \
-            .first()
+            .one()
         user = user_object.name
 
         # Verify that the relationship doesn't already exist in 'user_movies'
@@ -201,12 +201,17 @@ class SQLiteDataManager(DataManagerInterface):
     def update_movie(self, movie):
         pass
 
-    def delete_movie(self, movie_id: int):
-        movie_to_delete = self.db_session.query(Movie) \
-            .filter(Movie.id == literal(movie_id)).first()
-        if not movie_to_delete:
-            print(f"Error: Movie id <{movie_id}> not present in the db")
-            return
-        self.db_session.delete(movie_to_delete)
+    def delete_movie(self, user_id: int, movie_id: int):
+        """Remove the user-movie relationship entry, remove movie entry"""
+        relationship_to_del = self.db_session.query(UserMovie). \
+            filter(UserMovie.user_id == user_id,
+            UserMovie.movie_id == movie_id).one()
+        movie_to_del = self.db_session.query(Movie) \
+            .filter(Movie.id == literal(movie_id)).one()
+        # if not movie_to_delete:
+        #     print(f"Error: Movie id <{movie_id}> not present in the db")
+        #     return
+        self.db_session.delete(relationship_to_del)
+        self.db_session.delete(movie_to_del)
         self.db_session.commit()
         print(f"Movie with id <{movie_id}> successfully deleted.")

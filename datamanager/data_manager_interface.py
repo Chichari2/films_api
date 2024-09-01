@@ -64,6 +64,6 @@ class DataManagerInterface(ABC):
         pass
 
     @abstractmethod
-    def delete_movie(self, movie_id):
+    def delete_movie(self, user_id, movie_id):
         """Delete the movie with <movie_id> in the movies table"""
         pass

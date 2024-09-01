@@ -1,7 +1,16 @@
+"""
+The assignment on one hand wants us to work with a junction db table in order
+to relate many unique users to many unique movies, but at the same time it
+wants the movie entries to be editable. Bob's edit of the Titanic should not
+modify Alice's own Titanic entry. Meaning the movie entries can't be unique.
+It's a paradox that has lead me to seek a balance of redundancy on one hand
+and adjustment of the assignment's blueprints on the other hand.
+"""
+
 from flask import Flask, render_template, request, abort, redirect, url_for
 from flask import flash, get_flashed_messages
 from utils.omdb_api_data_fetcher import fetch_omdb_data
-from datamanager.sqlite_data_manager import SQLiteDataManager, User, Movie
+from datamanager.sqlite_data_manager import SQLiteDataManager, User, Movie, UserMovie
 
 app = Flask(__name__)
 # needed for flask.flash()
@@ -105,22 +114,14 @@ def update_user_movie():
 
 
 @app.route('/users/<user_id>/delete_movie/<movie_id>')
-def delete_user_movie(movie_id):
-    if request.method == 'GET':
-        data_manager.delete_movie(movie_id)
-
-
-# def main():
-#     data_manager.add_user("Mile")
-#     data_manager.add_movie("Titanic", "James Cameroon", 1997, 8.7)
-#     this_user = data_manager.get_user_id("Mile")
-#     this_movie = data_manager.get_movie_id("Titanic")
-#     data_manager.add_user_movie("Mile", "Titanic")
-#     movies = data_manager.get_user_movies(this_user)
-#     for movie in movies:
-#         print(f"User has movie titled: {movie.get("name")}")
+def delete_user_movie(user_id, movie_id):
+    """DocString"""
+    mov_to_del = data_manager.db_session.query(Movie).filter(Movie.id == movie_id).one()
+    mov_title = mov_to_del.name
+    data_manager.delete_movie(user_id, movie_id)
+    flash(f"'{mov_title}' successfully removed from inventory.", "info")
+    return redirect(url_for('list_user_movies', user_id=user_id)), 302
 
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
-    # main()
