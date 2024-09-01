@@ -14,10 +14,12 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, literal
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm import relationship, backref
-from data_manager_interface import DataManagerInterface
+from datamanager.data_manager_interface import DataManagerInterface
+
+SQL_FILEPATH = 'sqlite:///data/moviesdb.sqlite'
 
 # Create the database engine/connection
-engine = create_engine('sqlite:///data/moviesdb.sqlite')
+engine = create_engine(SQL_FILEPATH)
 # Create a session factory
 Session = sessionmaker(bind=engine)
 # Create a base class for declarative models, the parent for tables ("classes")
@@ -32,7 +34,7 @@ class User(Base):
     __tablename__ = 'users'
     # The id assignment will automatically be done by SQLAlchemy when commit()
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(80), nullable=False)
+    name = Column(String(80), unique=True, nullable=False)
 
 
 # Define the 'movies' table model
@@ -45,10 +47,11 @@ class Movie(Base):
     __tablename__ = 'movies'
     # The id assignment will automatically be done by SQLAlchemy when commit()
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(120), unique=True, nullable=False)
+    name = Column(String(120), nullable=False)
     director = Column(String(120), nullable=False)
     year = Column(Integer, nullable=False)
     rating = Column(Float, nullable=False)
+    poster = Column(String(240), nullable=False)
 
 
 # Define the 'user_movies' junction table model
@@ -114,44 +117,55 @@ class SQLiteDataManager(DataManagerInterface):
         return movie_objects_list
 
     def add_user(self, user: str):
-        # .first() ensures that None is returned for no match, unlike .all()
-        existing_user = self.db_session.query(User).filter_by(
-            name=user).first()
-        if existing_user:
-            print(f"User '{user}' already exists in the database!")
-            return
         new_user = User(name=user)
         self.db_session.add(new_user)
         # SQLAlchemy will now automatically generate a unique ID when commit()
         self.db_session.commit()
         print(f"User '{user}' added successfully!")
 
-    def add_movie(self, name: str, director: str, year: int, rating: float):
-        existing_movie = self.db_session.query(Movie).filter_by(
-            name=name).first()
-        if existing_movie:
-            print(f"Movie '{name}' already exists in the database!")
-            return
+    def is_available_username(self, user: str) -> bool:
+        """Return True if username (case-insensitive) not taken."""
+        # .first() ensures that None is returned for no match, unlike .all()
+        existing_user = self.db_session.query(User).filter_by(
+            name=user).first()
+        if existing_user:
+            return False
+        return True
+
+    def user_id_exists(self, user_id: int) -> bool:
+        """Return True if user_id present in 'users' table"""
+        existing_user = self.db_session.query(User).filter_by(
+            id=user_id).first()
+        if existing_user:
+            return True
+        return False
+
+    def add_movie(self, name: str, director: str, year: int,
+                  rating: float, poster: str) -> int:
+        # existing_movie = self.db_session.query(Movie).filter_by(
+        #     name=name).first()
+        # if existing_movie:
+        #     print(f"Movie '{name}' already exists in the database!")
+        #     return
         new_movie = Movie(name=name, director=director, year=year,
-                          rating=rating)
+                          rating=rating, poster=poster)
         self.db_session.add(new_movie)
         self.db_session.commit()
         print(f"Movie '{name}' added successfully!")
+        return cast(int, new_movie.id)  # redundant cast bc PyCharm typechecks
 
-    def add_user_movie(self, user: str, movie: str):
-        """Add a new relation of a user to a movie"""
+    def add_user_movie(self, user_id: int, movie_id: int):
+        """Add a new relation of a usr to a mov. The ids are sure to exist"""
 
-        # Validate input strings for existence in the 'movies' and 'users' tb
-        user_id = self.get_user_id(user)
-        movie_id = self.get_movie_id(movie)
-        if not user_id and not movie_id:
-            print(f"Error: User '{user}' and Movie '{movie}' not part of db.")
-        elif not user_id:
-            print(f"Error: {user} not in db, cannot be paired with {movie}")
-        elif not movie_id:
-            print(f"Error: {movie} not in db, cannot be paired with {user}")
-        if not user_id or not movie_id:
-            return
+        # obtain 'movie' and 'user' names
+        movie_object = self.db_session.query(Movie) \
+            .filter(Movie.id == movie_id) \
+            .first()
+        movie = movie_object.name
+        user_object = self.db_session.query(User) \
+            .filter(User.id == user_id) \
+            .first()
+        user = user_object.name
 
         # Verify that the relationship doesn't already exist in 'user_movies'
         existing_relationship = self.db_session.query(UserMovie).filter_by(

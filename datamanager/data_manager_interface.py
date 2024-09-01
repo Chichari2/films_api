@@ -34,7 +34,12 @@ class DataManagerInterface(ABC):
         pass
 
     @abstractmethod
-    def add_movie(self, name, director, year, rating):
+    def is_available_username(self, user):
+        """Check for username availability"""
+        pass
+
+    @abstractmethod
+    def add_movie(self, name, director, year, rating, poster):
         """Add 'movie' to the movies table"""
         pass
 
