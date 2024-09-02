@@ -180,26 +180,47 @@ class SQLiteDataManager(DataManagerInterface):
         self.db_session.commit()
         print(f"Movie {movie} successfully added for {user}!")
 
-    def get_user_id(self, user_name_sought: str) -> Optional[int]:
-        """Retrieve user id if user_name_sought present, else None"""
-        list_of_users = self.get_all_users()
-        for user in list_of_users:
-            if user.name == user_name_sought:
-                # cast necessary due to Pycharm typechecker vs. SQLAlchemy
-                return cast(int, user.id)
-        return None
+    # def get_user_id(self, user_name_sought: str) -> Optional[int]:
+    #     """Retrieve user id if user_name_sought present, else None"""
+    #     list_of_users = self.get_all_users()
+    #     for user in list_of_users:
+    #         if user.name == user_name_sought:
+    #             # cast necessary due to Pycharm typechecker vs. SQLAlchemy
+    #             return cast(int, user.id)
+    #     return None
+    #
+    # def get_movie_id(self, movie_title_sought: str) -> Optional[int]:
+    #     """Retrieve movie id if movie_title_sought present, else None"""
+    #     list_of_movies = self.get_all_movies()
+    #     for movie in list_of_movies:
+    #         if movie.name == movie_title_sought:
+    #             # cast necessary due to Pycharm typechecker vs. SQLAlchemy
+    #             return cast(int, movie.id)
+    #     return None
 
-    def get_movie_id(self, movie_title_sought: str) -> Optional[int]:
-        """Retrieve movie id if movie_title_sought present, else None"""
-        list_of_movies = self.get_all_movies()
-        for movie in list_of_movies:
-            if movie.name == movie_title_sought:
-                # cast necessary due to Pycharm typechecker vs. SQLAlchemy
-                return cast(int, movie.id)
-        return None
+    def get_movie_from_id(self, movie_id) -> Movie:
+        """Query 'movies' table for movie_id match, return Movie object"""
+        mov = self.db_session.query(Movie).filter(Movie.id == movie_id).one()
+        # the redundant cast necessary to appease PyCharm's typechecker
+        return cast(Movie, mov)
 
-    def update_movie(self, movie):
-        pass
+    @staticmethod
+    def create_movie_object(movie_id: int, name: str, director: str, year: int,
+                            rating: float, poster: str) -> Movie:
+        """Bundle parameters into a Movie object"""
+        movie = Movie(id=movie_id, name=name, director=director, year=year,
+                      rating=rating, poster=poster)
+        return movie
+
+    def update_movie(self, movie: Movie):
+        self.db_session.query(Movie).filter(Movie.id == movie.id).update(
+            {'name': movie.name,
+             'director': movie.director,
+             'year': movie.year,
+             'rating': movie.rating,
+             'poster': movie.poster}
+        )
+        self.db_session.commit()
 
     def delete_movie(self, user_id: int, movie_id: int):
         """Remove the user-movie relationship entry, remove movie entry"""

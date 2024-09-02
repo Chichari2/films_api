@@ -10,7 +10,7 @@ and adjustment of the assignment's blueprints on the other hand.
 from flask import Flask, render_template, request, abort, redirect, url_for
 from flask import flash, get_flashed_messages
 from utils.omdb_api_data_fetcher import fetch_omdb_data
-from datamanager.sqlite_data_manager import SQLiteDataManager, User, Movie, UserMovie
+from datamanager.sqlite_data_manager import SQLiteDataManager
 
 app = Flask(__name__)
 # needed for flask.flash()
@@ -42,8 +42,8 @@ def list_user_movies(user_id):
         flash(f"Bad user id: {user_id}", "info")
         return redirect(url_for('list_users')), 302
     movies = data_manager.get_user_movies(user_id)
-    # movies = [{"name": "Titanic", "director": "James", "year": 1997, "rating": 8.7, "poster": "https://m.media-amazon.com/images/I/51nbDBJ2h3L._AC_.jpg"}]
-    return render_template('user_page.html', popup=popup, movies=movies, user_id=user_id), 200
+    return render_template('user_page.html',
+                           popup=popup, movies=movies, user_id=user_id), 200
 
 
 @app.route('/add_user', methods=['GET', 'POST'])
@@ -128,21 +128,37 @@ def confirm_adding(user_id):
         return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
     else:
         return render_template(
-            'confirm_adding.html',name=name,
+            'confirm_adding.html', name=name,
             director=director, year=year, rating=rating,
-            poster=poster, user_id=user_id)
+            poster=poster, user_id=user_id), 200
 
 
-@app.route('/users/<user_id>/update_movie/<movie_id>')
-def update_user_movie():
-    pass
+@app.route('/users/<user_id>/update_movie/<movie_id>',
+           methods=['GET', 'POST'])
+def update_user_movie(user_id, movie_id):
+    """Render editing interface for GET, delegate updating for POST"""
+    if request.method == 'GET':
+        movie = data_manager.get_movie_from_id(movie_id)
+        return render_template('update_movie.html',
+                               movie=movie, user_id=user_id)
+    elif request.method == 'POST':
+        name = request.form.get('name')
+        director = request.form.get('director')
+        year = request.form.get('year')
+        rating = request.form.get('rating')
+        poster = request.form.get('poster')
+        movie = data_manager.create_movie_object(
+            int(movie_id), name, director, int(year), float(rating), poster)
+        data_manager.update_movie(movie)
+        flash(f"Update success", "info")
+        return redirect(url_for('list_user_movies', user_id=user_id)), 302
 
 
 @app.route('/users/<user_id>/delete_movie/<movie_id>')
 def delete_user_movie(user_id, movie_id):
-    """DocString"""
-    mov_to_del = data_manager.db_session.query(Movie).filter(Movie.id == movie_id).one()
-    mov_title = mov_to_del.name
+    """Delegate deletion protocol. Render nothing. Flash confirmation."""
+    movie = data_manager.get_movie_from_id(movie_id)
+    mov_title = movie.name
     data_manager.delete_movie(user_id, movie_id)
     flash(f"'{mov_title}' successfully removed from database.", "info")
     return redirect(url_for('list_user_movies', user_id=user_id)), 302
@@ -151,7 +167,7 @@ def delete_user_movie(user_id, movie_id):
 @app.route('/users/<user_id>/delete_movie/<movie_id>/confirm')
 def confirm_deletion(user_id, movie_id):
     """Render a page to ask user's confirmation."""
-    movie = data_manager.db_session.query(Movie).filter(Movie.id == movie_id).one()
+    movie = data_manager.get_movie_from_id(movie_id)
     return render_template('confirm_deletion.html',
                            movie=movie, user_id=user_id), 200
 

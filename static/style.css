@@ -1,5 +1,5 @@
 body {
-    background-color: #d1b08e;
+    background-color: #4c5a70;
     font-family: Tahoma, Verdana, Segoe, sans-serif;
     margin: 0;
     color: #faf4ed;
@@ -40,7 +40,7 @@ select {
     align-items: center;
     padding: 0.5em;
     margin: 0;
-    background-color: #d6b492;
+    background-color: #3d495c;
     a {
         height: 40px;
         margin-right: 40px;

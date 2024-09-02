@@ -20,10 +20,14 @@
       {% endfor %}
       </ul>
     {% endif %}
-    <form class="form" action="/users/{{ user_id }}/add_movie/confirm" method="POST">
-      <label for="name">Complete Movie Title</label>
-      <input type="text" id="name" name="name" placeholder="e.g. the godfather part II" required><br><br>
-      <input type="submit" value="Look for Movie">
+    <form class="form" action="/users/{{ user_id }}/update_movie/{{ movie.id }}" method="POST">
+      <label for="name">Movie Details</label>
+      <input type="text" id="name" name="name" value="{{ movie.name }}"required><br><br>
+      <input type="text" id="director" name="director" value="{{ movie.director }}"required><br><br>
+      <input type="text" id="year" name="year" value="{{ movie.year }}"required><br><br>
+      <input type="text" id="rating" name="rating" value="{{ movie.rating }}"required><br><br>
+      <input type="text" id="poster" name="poster" value="{{ movie.poster }}"required><br><br>
+      <input type="submit" value="Update Movie">
     </form>
   </body>
 </html>

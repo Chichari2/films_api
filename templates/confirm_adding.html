@@ -9,7 +9,7 @@
   </head>
   <body>
     <nav class="navbar">
-      <a href="/users">change user</a>
+      <a href="/users">switch user</a>
       <a href="/users/{{ user_id }}/add_movie">add movie</a>
       <a href="/users/{{ user_id }}">home</a>
     </nav>
@@ -21,7 +21,7 @@
       </div>
       <div>
         <div class="book_by">
-          <p>dir: {{ director }}</p>
+          <p>dir. {{ director }}</p>
         </div>
       </div>
       <form style="margin-top: 0;" action="/users/{{ user_id }}/add_movie" method="POST">

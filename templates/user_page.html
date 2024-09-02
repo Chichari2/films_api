@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
     <nav class="navbar">
-      <a href="/users">change user</a>
+      <a href="/users">switch user</a>
       <a href="/users/{{ user_id }}/add_movie">add movie</a>
       <a href="/users/{{ user_id }}">home</a>
     </nav>
@@ -28,9 +29,9 @@
           </div>
           <div>
             <div class="book_by">
-              <p>dir: {{ movie.director }}</p>
-              <form action="/author/{{ movie.id }}/delete" method="GET"> <!--gotta delete 2 tables' entries. How?-->
-                <input style="color: #dbd5cc;" type="submit" value=": rem all works">
+              <p>dir. {{ movie.director }}</p>
+              <form action="/users/{{ user_id }}/update_movie/{{ movie.id }}" method="GET"> <!--gotta delete 2 tables' entries. How?-->
+                <input style="color: #dbd5cc;" type="submit" value="edit details">
               </form>
             </div>
             <form style="margin-top: 0;" action="/users/{{ user_id }}/delete_movie/{{ movie.id }}/confirm" method="GET">

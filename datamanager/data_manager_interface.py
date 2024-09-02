@@ -48,14 +48,19 @@ class DataManagerInterface(ABC):
         """Add relationship between user and movie to user_movies tb."""
         pass
 
-    @abstractmethod
-    def get_user_id(self, user_name_sought):
-        """Retrieve the id of user_name_sought"""
-        pass
+    # @abstractmethod
+    # def get_user_id(self, user_name_sought):
+    #     """Retrieve the id of user_name_sought"""
+    #     pass
+    #
+    # @abstractmethod
+    # def get_movie_id(self, movie_title_sought):
+    #     """Retrieve the id of movie_title_sought"""
+    #     pass
 
     @abstractmethod
-    def get_movie_id(self, movie_title_sought):
-        """Retrieve the id of movie_title_sought"""
+    def get_movie_from_id(self, movie_id):
+        """Fetch movie object for given movie_id"""
         pass
 
     @abstractmethod
