@@ -22,20 +22,23 @@
     {% endif %}
     <div class="bulk_body">
       {% for movie in movies %}
-       <div class="book_repr">
+       <div class="movie_repr">
           <div>
             <h3>{{ movie.name }} ({{ movie.year }})</h3>
-            <img src="{{ movie.poster }}" alt="poster from OMDb"/>
+            <div class="img-box">
+              <img src="{{ movie.poster }}" alt="missing poster from OMDb"/>
+              <p class="movie-rating">{{ movie.rating }}</p>
+            </div>
           </div>
           <div>
-            <div class="book_by">
+            <div class="movie_by">
               <p>dir. {{ movie.director }}</p>
-              <form action="/users/{{ user_id }}/update_movie/{{ movie.id }}" method="GET"> <!--gotta delete 2 tables' entries. How?-->
-                <input style="color: #dbd5cc;" type="submit" value="edit details">
+              <form action="/users/{{ user_id }}/delete_movie/{{ movie.id }}/confirm" method="GET">
+                <input style="color: #dbd5cc;" type="submit" value="delete">
               </form>
             </div>
-            <form style="margin-top: 0;" action="/users/{{ user_id }}/delete_movie/{{ movie.id }}/confirm" method="GET">
-              <input type="submit" value="DELETE">
+            <form style="margin-top: 0;" action="/users/{{ user_id }}/update_movie/{{ movie.id }}" method="GET">
+              <input type="submit" value="EDIT">
             </form>
           </div>
        </div>

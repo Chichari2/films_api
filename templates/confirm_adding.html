@@ -13,14 +13,17 @@
       <a href="/users/{{ user_id }}/add_movie">add movie</a>
       <a href="/users/{{ user_id }}">home</a>
     </nav>
-    <p>Is this the movie you wanted to add?</p>
+    <p class="instruction">Is this the movie you wanted to add?</p>
     <div class="movie_centered">
       <div>
         <h3>{{ name }} ({{ year }})</h3>
-        <img src="{{ poster }}" alt="poster from OMDb"/>
+        <div class="img-box">
+          <img src="{{ poster }}" alt="missing poster from OMDb"/>
+          <p class="movie-rating">{{ rating }}</p>
+        </div>
       </div>
       <div>
-        <div class="book_by">
+        <div class="movie_by">
           <p>dir. {{ director }}</p>
         </div>
       </div>

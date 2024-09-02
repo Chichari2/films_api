@@ -13,19 +13,22 @@
       <a href="/users/{{ user_id }}/add_movie">add movie</a>
       <a href="/users/{{ user_id }}">home</a>
     </nav>
-    <p>Are you sure you want to remove this movie?</p>
+    <p class="instruction">Remove this movie from your database?</p>
     <div class="movie_centered">
       <div>
         <h3>{{ movie.name }} ({{ movie.year }})</h3>
-        <img src="{{ movie.poster }}" alt="poster from OMDb"/>
+        <div class="img-box">
+          <img src="{{ movie.poster }}" alt="missing poster from OMDb"/>
+          <p class="movie-rating">{{ movie.rating }}</p>
+        </div>
       </div>
       <div>
-        <div class="book_by">
+        <div class="movie_by">
           <p>dir. {{ movie.director }}</p>
         </div>
       </div>
       <form style="margin-top: 0;" action="/users/{{ user_id }}/delete_movie/{{ movie.id }}" method="GET">
-        <input type="submit" value="YES">
+        <input type="submit" class="red-hover-button" value="YES">
       </form>
       <form style="margin-top: 0;" action="/users/{{ user_id }}" method="GET">
         <input type="submit" value="NO">

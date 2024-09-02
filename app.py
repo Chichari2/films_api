@@ -79,21 +79,6 @@ def add_user_movie(user_id):
         return render_template('add_movie.html',
                                popup=popup, user_id=user_id), 200
     elif request.method == 'POST':
-        # name = request.form.get('name', "").strip()
-        # if not name:
-        #     abort(400)
-        #
-        # # repurposing 'name' variable currently
-        # fetched_data = fetch_omdb_data(name)
-        # if not fetched_data:
-        #     flash(f"oMDB API found nothing, try another query", "info")
-        #     return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
-        # name, director, year, rating, poster = fetched_data
-        # if not (name and director and year and rating and poster):
-        #     flash(f"Incomplete oMDB API entry, try another query", "info")
-        #     return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
-        # else:
-
         # reacquire the data that was passed through the html
         name = request.form.get('name')
         director = request.form.get('director')
@@ -170,6 +155,13 @@ def confirm_deletion(user_id, movie_id):
     movie = data_manager.get_movie_from_id(movie_id)
     return render_template('confirm_deletion.html',
                            movie=movie, user_id=user_id), 200
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """Though we don't do anything with the argument, it is given by Flask
+    to the .errorhandler and we must apprehend it by naming one in the ()"""
+    return render_template('404.html'), 404
 
 
 if __name__ == "__main__":

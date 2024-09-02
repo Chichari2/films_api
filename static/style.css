@@ -85,10 +85,10 @@ select {
     padding: 10px;
 }
 
-.book_repr {
+.movie_repr {
     width: 300px;
     height: 590px;
-    margin: 20px;
+    margin: 25px;
     font-size: 10px;
     display: flex;
     flex-direction: column;
@@ -105,7 +105,7 @@ select {
     font-size: 10px;
 }
 
-.book_by {
+.movie_by {
     p {
         margin-top: 13px;
         margin-left: 1px;
@@ -129,10 +129,27 @@ select {
     margin-bottom: 0;
 }
 
+.img-box {
+    display: inline-block;
+    position: relative;
+}
+
 img {
     width: 300px;
     object-fit: cover;
     border-radius: 3px;
+}
+
+.movie-rating {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  width: 2.5em;
+  font-size: 1.3em;
+  background-color: gold;
+  color: black;
+  text-align: center;
 }
 
 .form {
@@ -164,6 +181,17 @@ img {
         opacity: 1;
         animation: fadeOut 4s forwards;
     }
+}
+
+.instruction {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    padding: 10px;
+    background-color: #ad7237;
+    justify-content: center;
 }
 
 @keyframes fadeOut {

@@ -135,7 +135,7 @@ class SQLiteDataManager(DataManagerInterface):
     def user_id_exists(self, user_id: int) -> bool:
         """Return True if user_id present in 'users' table"""
         existing_user = self.db_session.query(User).filter_by(
-            id=user_id).one()
+            id=user_id).first()
         if existing_user:
             return True
         return False

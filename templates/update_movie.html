@@ -21,11 +21,15 @@
       </ul>
     {% endif %}
     <form class="form" action="/users/{{ user_id }}/update_movie/{{ movie.id }}" method="POST">
-      <label for="name">Movie Details</label>
-      <input type="text" id="name" name="name" value="{{ movie.name }}"required><br><br>
-      <input type="text" id="director" name="director" value="{{ movie.director }}"required><br><br>
-      <input type="text" id="year" name="year" value="{{ movie.year }}"required><br><br>
-      <input type="text" id="rating" name="rating" value="{{ movie.rating }}"required><br><br>
+      <label for="name" style="color: grey;">Title</label>
+      <input type="text" id="name" name="name" value="{{ movie.name }}"required><br>
+      <label for="director" style="color: grey;">Director</label>
+      <input type="text" id="director" name="director" value="{{ movie.director }}"required><br>
+      <label for="year" style="color: grey;">Year</label>
+      <input type="text" id="year" name="year" value="{{ movie.year }}"required><br>
+      <label for="rating" style="color: grey;">IMDb Rating</label>
+      <input type="text" id="rating" name="rating" value="{{ movie.rating }}"required><br>
+      <label for="poster" style="color: grey;">Poster URL</label>
       <input type="text" id="poster" name="poster" value="{{ movie.poster }}"required><br><br>
       <input type="submit" value="Update Movie">
     </form>
