@@ -30,8 +30,8 @@ def fetch_omdb_data(movie_title: str) \
     """Fetches the movie data for 'movie_title'."""
     req_url = API_BASE_URL + API_KEY + f"&t={movie_title}"
     try:
-        response = requests.get(req_url, timeout=1)
-    except requests.ConnectionError:
+        response = requests.get(req_url, timeout=3)
+    except (requests.ConnectionError, requests.ReadTimeout, requests.Timeout):
         print("Error connecting to the API.")
         return None
     if response.status_code != 200:

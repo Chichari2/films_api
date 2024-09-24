@@ -6,10 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>User page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='favicon.png') }}">
   </head>
   <body>
     <nav class="navbar">
-      <a href="/users">switch user</a>
+      <a href="/users/{{ user_id }}/delete_user/confirm" style="color: #630e0e;">delete this user</a>
+      <a href="/users">switch users</a>
       <a href="/users/{{ user_id }}/add_movie">add movie</a>
       <a href="/users/{{ user_id }}">home</a>
     </nav>
@@ -26,7 +28,11 @@
           <div>
             <h3>{{ movie.name }} ({{ movie.year }})</h3>
             <div class="img-box">
-              <img src="{{ movie.poster }}" alt="missing poster from OMDb"/>
+              <img
+                  src="{{ movie.poster }}"
+                  alt="missing poster"
+                  onerror="this.onerror=null; this.src='/static/missing_image.jpg';"
+              />
               <p class="movie-rating">{{ movie.rating }}</p>
             </div>
           </div>

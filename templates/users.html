@@ -6,9 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Users overview</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='favicon.png') }}">
   </head>
   <body>
     <nav class="navbar">
+      <a href="/add_user">add new user</a>
       <a href="/">home</a>
     </nav>
     {% if popup %}
@@ -23,7 +25,6 @@
       <div class="movie_repr">
         <div>
           <a href="/users/{{ user.id }}">{{ user.name }}</a>
-          <h3>{{ user.name }}</h3>
         </div>
       </div>
     {% endfor %}

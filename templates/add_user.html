@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Add user to app database</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='favicon.png') }}">
   </head>
   <body>
     <nav class="navbar">
@@ -20,7 +21,7 @@
     {% endif %}
     <form class="form" action="/add_user" method="POST">
       <label for="name">User Name</label>
-      <input type="text" id="name" name="name" required><br><br>
+      <input type="text" id="name" name="name" placeholder=" Example_Name01" required><br><br>
       <input type="submit" value="Add New User">
     </form>
   </body>

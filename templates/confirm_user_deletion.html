@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Confirm movie deletion</title>
+    <title>Confirm user deletion</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='favicon.png') }}">
   </head>
@@ -14,25 +14,9 @@
       <a href="/users/{{ user_id }}/add_movie">add movie</a>
       <a href="/users/{{ user_id }}">home</a>
     </nav>
-    <p class="instruction">Remove this movie from your database?</p>
-    <div class="movie_centered">
-      <div>
-        <h3>{{ movie.name }} ({{ movie.year }})</h3>
-        <div class="img-box">
-          <img
-              src="{{ movie.poster }}"
-              alt="missing poster"
-              onerror="this.onerror=null; this.src='/static/missing_image.jpg';"
-          />
-          <p class="movie-rating">{{ movie.rating }}</p>
-        </div>
-      </div>
-      <div>
-        <div class="movie_by">
-          <p>dir. {{ movie.director }}</p>
-        </div>
-      </div>
-      <form style="margin-top: 0;" action="/users/{{ user_id }}/delete_movie/{{ movie.id }}" method="GET">
+    <p class="instruction">Delete account '{{ username }}' and all related movie entries?</p>
+    <div class="movie_centered" style="justify-content: right">
+      <form style="margin-top: 25px;" action="/users/{{ user_id }}/delete_user" method="GET">
         <input type="submit" class="red-hover-button" value="YES">
       </form>
       <form style="margin-top: 0;" action="/users/{{ user_id }}" method="GET">

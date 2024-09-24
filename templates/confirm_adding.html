@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Confirm adding of movie</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='favicon.png') }}">
   </head>
   <body>
     <nav class="navbar">
@@ -18,7 +19,11 @@
       <div>
         <h3>{{ name }} ({{ year }})</h3>
         <div class="img-box">
-          <img src="{{ poster }}" alt="missing poster from OMDb"/>
+          <img
+              src="{{ poster }}"
+              alt="missing poster from OMDb"
+              onerror="this.onerror=null; this.src='/static/missing_image.jpg';"
+          />
           <p class="movie-rating">{{ rating }}</p>
         </div>
       </div>

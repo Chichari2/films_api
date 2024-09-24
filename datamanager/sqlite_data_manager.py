@@ -204,6 +204,12 @@ class SQLiteDataManager(DataManagerInterface):
         # the redundant cast necessary to appease PyCharm's typechecker
         return cast(Movie, mov)
 
+    def get_username_from_id(self, user_id) -> String:
+        """Query 'users' table for user_id match, return username"""
+        user = self.db_session.query(User).filter(User.id == user_id).one()
+        # the redundant cast necessary to appease PyCharm's typechecker
+        return cast(String, user.name)
+
     @staticmethod
     def create_movie_object(movie_id: int, name: str, director: str, year: int,
                             rating: float, poster: str) -> Movie:
@@ -229,10 +235,16 @@ class SQLiteDataManager(DataManagerInterface):
             UserMovie.movie_id == movie_id).one()
         movie_to_del = self.db_session.query(Movie) \
             .filter(Movie.id == literal(movie_id)).one()
-        # if not movie_to_delete:
-        #     print(f"Error: Movie id <{movie_id}> not present in the db")
-        #     return
         self.db_session.delete(relationship_to_del)
         self.db_session.delete(movie_to_del)
         self.db_session.commit()
         print(f"Movie with id <{movie_id}> successfully deleted.")
+
+    def delete_user(self, user_id: int):
+        """Remove user. app ensures that all related movie entries are
+        deleted first."""
+        user_to_del = self.db_session.query(User) \
+            .filter(User.id == literal(user_id)).one()
+        self.db_session.delete(user_to_del)
+        self.db_session.commit()
+        print(f"User with id <{user_id}> successfully deleted.")
