@@ -15,7 +15,7 @@ from utils.omdb_api_data_fetcher import fetch_omdb_data
 from datamanager.sqlite_data_manager import SQLiteDataManager
 
 app = Flask(__name__)
-# needed for flask.flash()
+# needed for flask.flash():
 app.config['SECRET_KEY'] = 'super_secret_key'
 # I'm choosing not to bloat my SQLiteDataManager's __init__ and instead prefer
 # to externalize the db config. See SQL_FILEPATH in sql_data_manager
@@ -45,7 +45,8 @@ def list_user_movies(user_id):
         flash(f"Bad user id: {user_id}", "info")
         return redirect(url_for('list_users')), 302
     movies = data_manager.get_user_movies(user_id)
-    return render_template('user_page.html',
+    user = data_manager.get_username_from_id(user_id)
+    return render_template('user_page.html', user=user,
                            popup=popup, movies=movies, user_id=user_id), 200
 
 
@@ -115,11 +116,11 @@ def confirm_adding(user_id):
 
     fetched_data = fetch_omdb_data(name)
     if not fetched_data:
-        flash("oMDB API error: no match / connectivity issues", "info")
+        # flash(f"{fetched_data}", "info")
         return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
     # repurposing 'name' variable currently
     name, director, year, rating, poster = fetched_data
-    if not (name and director and year and rating and poster):
+    if None in [name, director, year, rating, poster]:
         flash(f"Incomplete oMDB API entry, try another query", "info")
         return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
     else:

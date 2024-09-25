@@ -140,8 +140,7 @@ class SQLiteDataManager(DataManagerInterface):
             return True
         return False
 
-    def add_movie(self, name: str, director: str, year: int,
-                  rating: float, poster: str) -> int:
+    def add_movie(self, name, director, year, rating, poster) -> int:
         # existing_movie = self.db_session.query(Movie).filter_by(
         #     name=name).first()
         # if existing_movie:

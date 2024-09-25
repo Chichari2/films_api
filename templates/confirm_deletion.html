@@ -24,7 +24,11 @@
               alt="missing poster"
               onerror="this.onerror=null; this.src='/static/missing_image.jpg';"
           />
-          <p class="movie-rating">{{ movie.rating }}</p>
+          {% if movie.rating == 0.0 %}
+            <p class="movie-rating">n/a</p>
+          {% else %}
+            <p class="movie-rating">{{ movie.rating }}</p>
+          {% endif %}
         </div>
       </div>
       <div>

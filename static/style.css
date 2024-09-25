@@ -95,6 +95,7 @@ select {
     justify-content: space-between;
 }
 
+/*Applied on confirm_add, confirm_delete, and user_movies, so everywhere*/
 .movie_centered {
     display: flex;
     flex-direction: column;
@@ -103,6 +104,12 @@ select {
     height: 590px;
     margin: 20px;
     font-size: 10px;
+    /* Wrap long titles in the class movie_centered */
+    h3 {
+    max-width: 300px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    }
 }
 
 .movie_by {

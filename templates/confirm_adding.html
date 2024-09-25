@@ -17,14 +17,18 @@
     <p class="instruction">Is this the movie you wanted to add?</p>
     <div class="movie_centered">
       <div>
-        <h3>{{ name }} ({{ year }})</h3>
+        <h3 class="movie_header">{{ name }} ({{ year }})</h3>
         <div class="img-box">
           <img
               src="{{ poster }}"
               alt="missing poster from OMDb"
               onerror="this.onerror=null; this.src='/static/missing_image.jpg';"
           />
-          <p class="movie-rating">{{ rating }}</p>
+          {% if rating == 0.0 %}
+            <p class="movie-rating">n/a</p>
+          {% else %}
+            <p class="movie-rating">{{ rating }}</p>
+          {% endif %}
         </div>
       </div>
       <div>
