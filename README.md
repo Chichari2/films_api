@@ -1,5 +1,13 @@
 # MovieDB_WebApp
-an educational fullstack project about creating a web interface for a personal database management via CRUD.
+An educational fullstack project about creating a web interface for account-based personal database management.
+
+![image](https://github.com/user-attachments/assets/b8ab8885-0148-4982-ab39-2ef56442dc41)
+
+## Project features
+* Database management: sqlalchemy.orm
+* Endpoint routing: Flask
+* 3rd party API: OMDb
+* Templating / dynamic webpage generation: Jinja2
 
 ## Installation
 
@@ -46,3 +54,16 @@ https://127.0.0.1:5000
 
 > [!NOTE]
 > If you wish to start your own database from scratch, delete the demo file `library.sqlite` in directory `data/`
+
+## Feedback
+
+If you have any feedback, feel free to reach out.
+
+| <img src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" alt="gh_logo.png" width="15" height="15"/> | <img src="https://cdn3.iconfinder.com/data/icons/web-ui-3/128/Mail-2-512.png" alt="email_icon.jpg" width="15" height="15"/> |
+| ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| [@MilosTadic01](github.com/MilosTadic01)                                                                                  | `milosgtadic` at yahoo.com                                                                                                       |
+
+
+## License
+
+[CC0 1.0 Universal](/LICENSE)
