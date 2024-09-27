@@ -3,16 +3,13 @@ An educational fullstack project about creating a web interface for account-base
 
 ![image](https://github.com/user-attachments/assets/b8ab8885-0148-4982-ab39-2ef56442dc41)
 
-## Project features
+## Project features and technologies overview
 * Database management: sqlalchemy.orm
 * Endpoint routing: Flask
 * 3rd party API: OMDb
 * Templating / dynamic webpage generation: Jinja2
 
 ## Installation
-
-> [!NOTE]
-> These installation steps portray a generic case on UNIX-like systems (Linux, Mac OS).
 
 1. Clone the repository.
 
@@ -39,6 +36,9 @@ An educational fullstack project about creating a web interface for account-base
 7. Add your key to your environment
 
         echo API_KEY=ReplaceThisWithYourKey > .env
+
+> [!NOTE]
+> These installation steps portray a generic case on UNIX-like systems (Linux, Mac OS).
 
 ## Usage/Examples
 
