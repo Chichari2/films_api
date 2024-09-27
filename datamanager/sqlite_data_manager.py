@@ -48,10 +48,10 @@ class Movie(Base):
     # The id assignment will automatically be done by SQLAlchemy when commit()
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(120), nullable=False)
-    director = Column(String(120), nullable=False)
-    year = Column(Integer, nullable=False)
-    rating = Column(Float, nullable=False)
-    poster = Column(String(240), nullable=False)
+    director = Column(String(120), nullable=True)
+    year = Column(Integer, nullable=True)
+    rating = Column(Float, nullable=True)
+    poster = Column(String(400), nullable=True)
 
 
 # Define the 'user_movies' junction table model
@@ -140,16 +140,13 @@ class SQLiteDataManager(DataManagerInterface):
             return True
         return False
 
-    def add_movie(self, name, director, year, rating, poster) -> int:
-        # existing_movie = self.db_session.query(Movie).filter_by(
-        #     name=name).first()
-        # if existing_movie:
-        #     print(f"Movie '{name}' already exists in the database!")
-        #     return
+    def add_movie(self, name: str, director: str, year: int, rating: float,
+                  poster: str) -> int:
+        """Add movie to DB, return the auto-incremented movie.id"""
         new_movie = Movie(name=name, director=director, year=year,
                           rating=rating, poster=poster)
         self.db_session.add(new_movie)
-        self.db_session.commit()
+        self.db_session.commit()  # this is where new_movie.id gets created
         print(f"Movie '{name}' added successfully!")
         return cast(int, new_movie.id)  # redundant cast bc PyCharm typechecks
 

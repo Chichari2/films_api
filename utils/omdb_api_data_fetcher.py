@@ -17,14 +17,6 @@ load_dotenv()
 API_KEY = os.getenv('API_KEY')
 API_BASE_URL = "http://www.omdbapi.com/?apikey="
 POSTER_BASE_URL = "http://img.omdbapi.com/?apikey="
-
-"""
-{
-    "Response": "False",
-    "Error": "Movie not found!"
-}
-"""
-
 NO_MATCH = "No movie matched the query, try modifying or try another."
 
 
@@ -45,6 +37,7 @@ def fetch_omdb_data(movie_title: str) \
     if response.status_code != 200:
         flash(f"API conn error, status code: {response.status_code}", "info")
         return None
+
     data = response.text
     response_dict = json.loads(data)
     if response_dict.get("Response") == "False":
@@ -62,7 +55,6 @@ def fetch_omdb_data(movie_title: str) \
             year = year.translate(str.maketrans('', '', '-–_'))
             year = int(year)
         rating = response_dict.get("imdbRating")
-        print(rating)
         if rating == 'N/A':
             rating = 0.0
         else:
@@ -70,6 +62,7 @@ def fetch_omdb_data(movie_title: str) \
             rating = round(float(rating), 1)
         poster = response_dict.get("Poster")
     except ValueError as e:
-        flash(f"Incomplete movie entry for '{movie_title}', abort.", "info")
+        flash(f"Incomplete movie entry for '{movie_title}', abort.",
+              "info")
         return None
     return name, director, year, rating, poster
