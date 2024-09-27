@@ -20,6 +20,12 @@ POSTER_BASE_URL = "http://img.omdbapi.com/?apikey="
 NO_MATCH = "No movie matched the query, try modifying or try another."
 
 
+def bail_protocol(err_mess: str) -> None:
+    """Flash an error message and return None."""
+    flash(err_mess, "info")
+    return None
+
+
 def fetch_omdb_data(movie_title: str) \
         -> Optional[Tuple[str, str, int, float, str]]:
     """
@@ -29,40 +35,41 @@ def fetch_omdb_data(movie_title: str) \
     work unrelated to Flask, or at least that was the idea.
     """
     req_url = API_BASE_URL + API_KEY + f"&t={movie_title}"
+
     try:
         response = requests.get(req_url, timeout=4)
     except (requests.ConnectionError, requests.ReadTimeout, requests.Timeout):
-        flash("Error accessing API, timeout.", "info")
-        return None
+        return bail_protocol("Error accessing API, timeout.")
     if response.status_code != 200:
-        flash(f"API conn error, status code: {response.status_code}", "info")
-        return None
+        return bail_protocol(f"API error, status code: {response.status_code}")
 
     data = response.text
     response_dict = json.loads(data)
     if response_dict.get("Response") == "False":
-        flash(f"Movie '{movie_title}' not found!", "info")
-        return None
-    try:  # only meant to catch any errors for int() and round()
-        name = response_dict.get("Title")
-        if ',' in name:  # csv precaution: remove any ',' in movie title
-            name = name.translate(str.maketrans('', '', ','))
-        director = response_dict.get("Director")
-        year = response_dict.get("Year")
-        if year == 'N/A':
-            year = 1850
-        else:
-            year = year.translate(str.maketrans('', '', '-–_'))
-            year = int(year)
-        rating = response_dict.get("imdbRating")
-        if rating == 'N/A':
-            rating = 0.0
-        else:
-            rating = rating.translate(str.maketrans('', '', '-–_'))
-            rating = round(float(rating), 1)
-        poster = response_dict.get("Poster")
+        return bail_protocol(f"Movie '{movie_title}' not found!")
+
+    name = response_dict.get("Title")
+    director = response_dict.get("Director")
+    year = response_dict.get("Year")
+    rating = response_dict.get("imdbRating")
+    poster = response_dict.get("Poster")
+
+    # manual rectifications
+    if ',' in name:  # csv precaution: remove any ',' in movie title
+        name = name.translate(str.maketrans('', '', ','))
+    if year == 'N/A' or year is None:
+        year = '0'
+    if rating == 'N/A' or year is None:
+        rating = '0.0'
+
+    if None in [name, director, year, rating, poster]:
+        return bail_protocol(f"Corrupt entry for '{movie_title}', abort.")
+
+    try:  # int() and round()
+        year = year.translate(str.maketrans('', '', '-–_'))
+        year = int(year)
+        rating = rating.translate(str.maketrans('', '', '-–_'))
+        rating = round(float(rating), 1)
     except ValueError as e:
-        flash(f"Incomplete movie entry for '{movie_title}', abort.",
-              "info")
-        return None
+        return bail_protocol(f"Corrupt entry for '{movie_title}', abort.")
     return name, director, year, rating, poster

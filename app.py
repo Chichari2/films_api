@@ -88,8 +88,9 @@ def add_user_movie(user_id):
         if not data_manager.user_id_exists(user_id):
             flash(f"Unassigned user id: {user_id}.", "info")
             return redirect(url_for('list_users')), 302
-        return render_template('add_movie.html',
-                               popup=popup, user_id=user_id), 200
+        user = data_manager.get_username_from_id(user_id)
+        return render_template(
+            'add_movie.html', popup=popup, user=user, user_id=user_id), 200
     elif request.method == 'POST':
         # reacquire the data that was passed through the html
         name = request.form.get('name')
@@ -99,10 +100,9 @@ def add_user_movie(user_id):
         poster = request.form.get('poster')
         movie_id = data_manager.add_movie(name, director, int(year),
                                           float(rating), poster)
-        print(f"movie id: {movie_id}. user id: {user_id}")
+        print(f"movie id: {movie_id}. user id: {user_id}.")
         data_manager.add_user_movie(user_id, movie_id)
         flash(f"'{name}' added to database.", "info")
-        # movies = data_manager.get_user_movies(user_id)
         return redirect(url_for('list_user_movies', user_id=user_id)), 302
 
 
@@ -110,24 +110,18 @@ def add_user_movie(user_id):
 def confirm_adding(user_id):
     """Render a page to have user confirm the inclusion of what OMDB has
     fetched. Exclusively handles POST method."""
-    name = request.form.get('name', "").strip()
-    if not name:
+    query_for_omdb = request.form.get('name', "").strip()
+    if not query_for_omdb:
         abort(400)
-
-    fetched_data = fetch_omdb_data(name)
+    fetched_data = fetch_omdb_data(query_for_omdb)
     if not fetched_data:
-        # flash(f"{fetched_data}", "info")
         return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
-    # repurposing 'name' variable currently
     name, director, year, rating, poster = fetched_data
-    if None in [name, director, year, rating, poster]:
-        flash(f"Incomplete oMDB API entry, try another query", "info")
-        return redirect(url_for(f'add_user_movie', user_id=user_id)), 302
-    else:
-        return render_template(
-            'confirm_adding.html', name=name,
-            director=director, year=year, rating=rating,
-            poster=poster, user_id=user_id), 200
+    user = data_manager.get_username_from_id(user_id)
+    return render_template(
+        'confirm_adding.html', name=name,
+        director=director, year=year, rating=rating, user=user,
+        poster=poster, user_id=user_id), 200
 
 
 @app.route('/users/<user_id>/update_movie/<movie_id>',
@@ -136,21 +130,23 @@ def update_user_movie(user_id, movie_id):
     """Render editing interface for GET, delegate updating for POST"""
     popup = get_flashed_messages(with_categories=True)
     movie = data_manager.get_movie_from_id(movie_id)
+    user = data_manager.get_username_from_id(user_id)
     if request.method == 'GET':
-        return render_template('update_movie.html',
-                               movie=movie, user_id=user_id, popup=popup)
+        return render_template(
+            'update_movie.html',
+            movie=movie, user=user, user_id=user_id, popup=popup)
     elif request.method == 'POST':
+        name = request.form.get('name').strip()
+        director = request.form.get('director').strip()
+        poster = request.form.get('poster').strip()
         try:
-            name = request.form.get('name')
-            director = request.form.get('director')
-            year = int(request.form.get('year'))
-            if not 1800 < year < datetime.now().year + 5:
+            year = int(request.form.get('year').strip())
+            if not 1799 < year < datetime.now().year + 5 and year != 0:
                 raise ValueError(f"Bad timeline, no movies at year {year}")
-            rating = float(request.form.get('rating'))
+            rating = round(float(request.form.get('rating').strip()), 1)
             if not 0 <= rating <= 10:
                 raise ValueError(f"IMDB ratings range from 0.0 to 10.0")
-            poster = request.form.get('poster')
-            # it is now safe to repurpose the 'movie' variable
+            # it is now safe to repurpose i.e. <update> the 'movie' variable
             movie = data_manager.create_movie_object(
                 movie_id, name, director, year, rating, poster)
         except (TypeError, ValueError) as e:
@@ -177,8 +173,9 @@ def delete_user_movie(user_id, movie_id):
 def confirm_deletion(user_id, movie_id):
     """Render a page to ask the user's confirmation of movie deletion."""
     movie = data_manager.get_movie_from_id(movie_id)
+    user = data_manager.get_username_from_id(user_id)
     return render_template('confirm_deletion.html',
-                           movie=movie, user_id=user_id), 200
+                           movie=movie, user_id=user_id, user=user), 200
 
 
 @app.route('/users/<user_id>/delete_user')

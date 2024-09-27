@@ -14,6 +14,9 @@
       <a href="/users/{{ user_id }}/add_movie">add movie</a>
       <a href="/users/{{ user_id }}">home</a>
     </nav>
+    <div class="bulk_body">
+      <p style="font-size:2em; margin-left:20px; color: #3d495c; font-weight: bold;">{{ username }}'s movie database</p>
+    </div>
     <p class="instruction">Delete account '{{ username }}' and all related movie entries?</p>
     <div class="movie_centered" style="justify-content: right">
       <form style="margin-top: 25px;" action="/users/{{ user_id }}/delete_user" method="GET">

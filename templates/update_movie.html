@@ -14,6 +14,9 @@
       <a href="/users/{{ user_id }}/add_movie">add movie</a>
       <a href="/users/{{ user_id }}">home</a>
     </nav>
+    <div class="bulk_body">
+      <p class="username_bold">{{ user }}'s movie database</p>
+    </div>
     {% if popup %}
       <ul class=flashes>
       {% for category, message in popup %}

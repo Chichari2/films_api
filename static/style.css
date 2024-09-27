@@ -112,6 +112,13 @@ select {
     }
 }
 
+.username_bold {
+    font-size: 2em;
+    margin-left: 20px;
+    color: #3d495c;
+    font-weight: bold;
+}
+
 .movie_by {
     p {
         margin-top: 13px;
@@ -197,6 +204,7 @@ img {
     align-items: center;
     font-size: 1.5em;
     padding: 10px;
+    margin: 0;
     background-color: #ad7237;
     justify-content: center;
 }

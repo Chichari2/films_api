@@ -10,9 +10,12 @@
   </head>
   <body>
     <nav class="navbar">
-      <a href="/add_user">add new user</a>
-      <a href="/">home</a>
+      <a href="/add_user">create account</a>
+      <a href="/">welcome page</a>
     </nav>
+    <p class="instruction" style="background-color: #3d495c; margin-top: 24px;">
+      Select your account or create a new one
+    </p>
     {% if popup %}
       <ul class=flashes>
       {% for category, message in popup %}
@@ -20,12 +23,10 @@
       {% endfor %}
       </ul>
     {% endif %}
-    <div class="bulk_body">
+    <div style="margin-top: 30px;"></div>
     {% for user in users %}
-      <div class="movie_repr">
-        <div>
-          <a href="/users/{{ user.id }}">{{ user.name }}</a>
-        </div>
+      <div class="bulk_body" style="margin: 10px; margin-left: 30px;">
+        <a class="username_bold" style="text-decoration:none" href="/users/{{ user.id }}">{{ user.name }}</a>
       </div>
     {% endfor %}
     </div>

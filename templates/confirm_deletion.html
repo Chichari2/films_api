@@ -14,10 +14,17 @@
       <a href="/users/{{ user_id }}/add_movie">add movie</a>
       <a href="/users/{{ user_id }}">home</a>
     </nav>
+    <div class="bulk_body">
+      <p class="username_bold">{{ user }}'s movie database</p>
+    </div>
     <p class="instruction">Remove this movie from your database?</p>
     <div class="movie_centered">
       <div>
-        <h3>{{ movie.name }} ({{ movie.year }})</h3>
+        {% if movie.year == 0 %}
+          <h3 class="movie_header">{{ movie.name }} (n/a)</h3>
+        {% else %}
+          <h3 class="movie_header">{{ movie.name }} ({{ movie.year }})</h3>
+        {% endif %}
         <div class="img-box">
           <img
               src="{{ movie.poster }}"

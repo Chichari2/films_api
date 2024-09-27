@@ -48,10 +48,10 @@ class Movie(Base):
     # The id assignment will automatically be done by SQLAlchemy when commit()
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(120), nullable=False)
-    director = Column(String(120), nullable=True)
-    year = Column(Integer, nullable=True)
-    rating = Column(Float, nullable=True)
-    poster = Column(String(400), nullable=True)
+    director = Column(String(120), nullable=False)
+    year = Column(Integer, nullable=False)
+    rating = Column(Float, nullable=False)
+    poster = Column(String(400), nullable=False)
 
 
 # Define the 'user_movies' junction table model
