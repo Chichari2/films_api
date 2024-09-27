@@ -9,7 +9,7 @@ Furthermore, I'm choosing to work with strings as arguments of most methods,
 in order to cut out the necessity for any additional layers of control.
 """
 
-from typing import Type, List, Optional, cast
+from typing import Type, List, cast
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, literal
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -59,8 +59,8 @@ class UserMovie(Base):
     """
     This 'junction / association / cross-reference table' is needed since we
     want to relate many (movies) to many (users) meaning multiple occurrences
-    of either. The attribute 'back_populates' sets up a bidirectional
-    relationship between two classes.
+    of either. The attribute 'back_populates', or in this case 'backref',
+    sets up a bidirectional relationship between two classes.
     Note: The class attributes 'user' and 'movie' are not columns. Instead,
     what they achieve translates to the following in SQL:
     CREATE TABLE user_movies (
@@ -176,24 +176,6 @@ class SQLiteDataManager(DataManagerInterface):
         self.db_session.commit()
         print(f"Movie {movie} successfully added for {user}!")
 
-    # def get_user_id(self, user_name_sought: str) -> Optional[int]:
-    #     """Retrieve user id if user_name_sought present, else None"""
-    #     list_of_users = self.get_all_users()
-    #     for user in list_of_users:
-    #         if user.name == user_name_sought:
-    #             # cast necessary due to Pycharm typechecker vs. SQLAlchemy
-    #             return cast(int, user.id)
-    #     return None
-    #
-    # def get_movie_id(self, movie_title_sought: str) -> Optional[int]:
-    #     """Retrieve movie id if movie_title_sought present, else None"""
-    #     list_of_movies = self.get_all_movies()
-    #     for movie in list_of_movies:
-    #         if movie.name == movie_title_sought:
-    #             # cast necessary due to Pycharm typechecker vs. SQLAlchemy
-    #             return cast(int, movie.id)
-    #     return None
-
     def get_movie_from_id(self, movie_id) -> Movie:
         """Query 'movies' table for movie_id match, return Movie object"""
         mov = self.db_session.query(Movie).filter(Movie.id == movie_id).one()
@@ -228,7 +210,7 @@ class SQLiteDataManager(DataManagerInterface):
         """Remove the user-movie relationship entry, remove movie entry"""
         relationship_to_del = self.db_session.query(UserMovie). \
             filter(UserMovie.user_id == user_id,
-            UserMovie.movie_id == movie_id).one()
+                   UserMovie.movie_id == movie_id).one()
         movie_to_del = self.db_session.query(Movie) \
             .filter(Movie.id == literal(movie_id)).one()
         self.db_session.delete(relationship_to_del)

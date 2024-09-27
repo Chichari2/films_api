@@ -70,6 +70,6 @@ def fetch_omdb_data(movie_title: str) \
         year = int(year)
         rating = rating.translate(str.maketrans('', '', '-–_'))
         rating = round(float(rating), 1)
-    except ValueError as e:
+    except ValueError:
         return bail_protocol(f"Corrupt entry for '{movie_title}', abort.")
     return name, director, year, rating, poster
