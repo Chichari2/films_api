@@ -1,13 +1,3 @@
-"""
-The assignment on one hand wants us to work with a junction db table in order
-to relate many unique users to many unique movies, but at the same time it
-wants the movie entries to be editable. This introduces an ambiguity which
-ranges from unclarity to paradox. Bob's edit of the Titanic should not
-modify Alice's own Titanic entry. Meaning the movie entries can't be unique.
-It's a design requirement that has led me to seek a balance of redundancy on
-one hand and an adjustment of the assignment's blueprints on the other hand.
-"""
-
 from flask import Flask, render_template, request, abort, redirect, url_for
 from flask import flash, get_flashed_messages
 from datetime import datetime
@@ -206,4 +196,4 @@ def page_not_found(e):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)

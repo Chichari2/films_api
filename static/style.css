@@ -1,216 +1,40 @@
 body {
-    background-color: #4c5a70;
-    font-family: Tahoma, Verdana, Segoe, sans-serif;
+    background-color: #f7f9fc; /* Светлый фон */
+    font-family: Arial, sans-serif; /* Простой шрифт */
     margin: 0;
-    color: #faf4ed;
-}
-
-input {
-    border: none;
-    height: 20px;
-    width: 300px;
-    margin-top: 5px;
-}
-
-input[type="submit"] {
-    background-color: #b58a5e;
-    color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    height: 40px;
-}
-
-input[type="submit"]:hover {
-    background-color: #ad7237;
-}
-
-select {
-    margin-bottom: 50px;
-    margin-top: 5px;
-    border: none;
-    border-radius: 2px;
+    color: #333; /* Тёмно-серый текст */
 }
 
 .navbar {
     display: flex;
-    height: 50px;
-    justify-content: right;
-    align-items: center;
-    padding: 0.5em;
-    margin: 0;
-    background-color: #3d495c;
-    a {
-        height: 40px;
-        margin-right: 40px;
-        color: white;
-        text-decoration: none; /* Remove underline */
-        font-size: 2em;
-        transition: background-color 0.3s;
-    }
+    justify-content: flex-end; /* Выравнивание навигации вправо */
+    background-color: #4a90e2; /* Светло-голубой цвет для навигации */
+    padding: 10px 20px;
 }
 
-.menu {
-    display: flex;
-    flex-direction: row;
-    height: 40px;
-    justify-content: space-around;
-    align-items: center;
-    padding: 0.5em;
-    margin-bottom: 1em;
-    input {
-        height: 20px;
-        font-size: 12px;
-        width: 100px;
-        margin-top: 0;
-        padding: 0;
-        background-color: #c9a37d;
-    }
-    input[type="text"] {
-        width: 250px;
-    }
-    select {
-        margin-bottom: 0;
-    }
-}
-
-::placeholder {
-    color: #dbd5cc;
-}
-
-.bulk_body {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 10px;
-}
-
-.movie_repr {
-    width: 300px;
-    height: 590px;
-    margin: 25px;
-    font-size: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-/*Applied on confirm_add, confirm_delete, and user_movies, so everywhere*/
-.movie_centered {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 590px;
-    margin: 20px;
-    font-size: 10px;
-    /* Wrap long titles in the class movie_centered */
-    h3 {
-    max-width: 300px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    }
-}
-
-.username_bold {
-    font-size: 2em;
-    margin-left: 20px;
-    color: #3d495c;
-    font-weight: bold;
-}
-
-.movie_by {
-    p {
-        margin-top: 13px;
-        margin-left: 1px;
-    }
-    input[type="submit"] {
-        width: 80px;
-        font-size: 10px;
-        height: 18px;
-        background-color: #c9a37d;
-        align-content: center;
-        line-height: normal;
-        vertical-align: middle;
-        padding: 3px;
-    }
-    input[type="submit"]:hover {
-        background-color: #630e0e;
-    }
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0;
-}
-
-.img-box {
-    display: inline-block;
-    position: relative;
-}
-
-img {
-    width: 300px;
-    object-fit: cover;
-    border-radius: 3px;
-}
-
-.movie-rating {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  width: 2.5em;
-  font-size: 1.3em;
-  background-color: gold;
-  color: black;
-  text-align: center;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #faf4ed;
-    margin-top: 50px;
-    select {
-        border: none;
-        width: 200px;
-        height: 20px;
-        color: grey;
-        border-radius: 3px;
-    }
-}
-
-.flashes {
-    list-style-type: none;
-    padding: 0;
-    li {
-        padding: 10px;
-        text-align: center;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        background-color: #f0f8ff;
-        color: #000;
-        opacity: 1;
-        animation: fadeOut 4s forwards;
-    }
+.navbar a {
+    color: white; /* Белый цвет текста для ссылки */
+    text-decoration: none; /* Убираем подчеркивание */
+    font-size: 1.2em; /* Размер шрифта для ссылки */
+    margin-left: 20px; /* Отступ между ссылками */
 }
 
 .instruction {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5em;
-    padding: 10px;
-    margin: 0;
-    background-color: #ad7237;
-    justify-content: center;
+    background-color: #4a90e2; /* Цвет фона для инструкции */
+    color: white; /* Белый текст */
+    padding: 15px;
+    text-align: center;
+    margin: 20px 0; /* Отступ сверху и снизу */
 }
 
-@keyframes fadeOut {
-    0% { opacity: 1; }
-    75% { opacity: 1; }
-    100% { opacity: 0; }
+.image-container {
+    display: flex;
+    justify-content: center; /* Центрирование изображения */
+    margin-top: 24px;
+}
+
+.welcome-image {
+    width: 1000px; /* Ширина изображения */
+    height: auto; /* Автоматическая высота для пропорций */
+    border: 2px solid #000; /* Чёрная рамка вокруг изображения */
 }

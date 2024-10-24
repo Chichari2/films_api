@@ -1,7 +1,3 @@
-"""The purpose of this file is to remove out of sight the technical details
-which regard API interaction, in order to increase legibility of other parts
-of the program."""
-
 import os
 import sys
 import json

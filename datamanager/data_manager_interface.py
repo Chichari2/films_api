@@ -2,17 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class DataManagerInterface(ABC):
-    """Abstract class to define abstract methods which each
-    DataManager (e.g. SQLite, JSON, CSV, etc.) should have.
-    For this project, we're probably only going to implement...
-    class SQLiteDataManager(DataManagerInterface)
-    ...which has a few consequences.
-    SQLite operations are fundamentally different from file I/O. They involve
-    SQL queries and interactions with a database engine rather than reading
-    from and writing to a file. Ergo, I can hardly define any instance methods
-    within this ABC definition. Meaning unlike mere JSON vs CSV, these all
-    need to be abstract methods.
-    """
     @abstractmethod
     def get_all_users(self):
         """Return users data as a list"""

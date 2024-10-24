@@ -1,20 +1,10 @@
-"""
-For better or for worse, I've come to the following conclusion:
-I should define the models in the same file where I'm creating and binding
-the engine. I'm sure some basic importing can make Base accessible elsewhere,
-however I decided to keep things simple and focus on achieving better control
-of sqlalchemy.orm rather than of the python importing game.
-
-Furthermore, I'm choosing to work with strings as arguments of most methods,
-in order to cut out the necessity for any additional layers of control.
-"""
-
 from typing import Type, List, cast
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, literal
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm import relationship, backref
-from datamanager.data_manager_interface import DataManagerInterface
+from MovieDB_WebApp.datamanager.data_manager_interface import DataManagerInterface
+#from data_manager_interface import DataManagerInterface
 
 SQL_FILEPATH = 'sqlite:///data/moviesdb.sqlite'
 
@@ -56,21 +46,6 @@ class Movie(Base):
 
 # Define the 'user_movies' junction table model
 class UserMovie(Base):
-    """
-    This 'junction / association / cross-reference table' is needed since we
-    want to relate many (movies) to many (users) meaning multiple occurrences
-    of either. The attribute 'back_populates', or in this case 'backref',
-    sets up a bidirectional relationship between two classes.
-    Note: The class attributes 'user' and 'movie' are not columns. Instead,
-    what they achieve translates to the following in SQL:
-    CREATE TABLE user_movies (
-        id INTEGER PRIMARY KEY,
-        user_id INTEGER NOT NULL,
-        movie_id INTEGER NOT NULL,
-        FOREIGN KEY(user_id) REFERENCES users(id),      <--
-        FOREIGN KEY(movie_id) REFERENCES movies(id)     <--
-    );
-    """
     __tablename__ = 'user_movies'
     # The id assignment will automatically be done by SQLAlchemy when commit()
     id = Column(Integer, primary_key=True, autoincrement=True)
